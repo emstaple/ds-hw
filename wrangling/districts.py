@@ -11,10 +11,22 @@ def district_margins(state_lines):
 
     @lines The csv rows that correspond to the districts of a single state
     """
-
+    first = 101.0
+    second = 0.0
+    margin = 100.0
     # Complete this function
+    for x in state_lines:
+        if x["GENERAL %"]:
+            percent_string = x["GENERAL %"].replace(",",".").replace("%","")
+            if (percent_string != ""):
+                percent = float(percent_string)
+                if x["GE WINNER INDICATOR"] == "W":
+                    first = percent
+                elif x["GE WINNER INDICATOR"] != "W" and percent > second:
+                    second = percent
+#    return dict((int((x["D"])[:2]), first - second) for x in state_lines if x["D"] and x["D"] != "H")
     return dict((int(x["D"]), 25.0) for x in state_lines if x["D"] and
-                not (x["D"] == "H" or " - " in x["D"]))
+            not (x["D"] == "H" or " - " in x["D"]))
 
 def all_states(lines):
     """
@@ -24,7 +36,7 @@ def all_states(lines):
     """
 
     # Complete this function
-    return set(["Alabama"])
+    return set(x["STATE"] for x in lines if x["STATE"] != "")
 
 def all_state_rows(lines, state):
     """
@@ -35,8 +47,12 @@ def all_state_rows(lines, state):
     """
 
     # Complete/correct this function
-    for ii in lines[:10]:
-        yield ii
+    for ii in lines:
+        if (ii["STATE"] == state):
+            yield ii
+
+    # Alternate Solution (Single Line)
+    # return list(x for x in lines if x["STATE"] == state)
 
 if __name__ == "__main__":
     # You shouldn't need to modify this part of the code
